@@ -14,17 +14,57 @@ namespace SQLConnection
             connection.Open();
             SqlCommand command1 = connection.CreateCommand();
 
-            
-            Console.WriteLine("Enter Id and name of technology to insert");
-            int TechId = int.Parse( Console.ReadLine() );   
-            string TechName = Console.ReadLine().Trim();
-            command1.CommandText = $"insert into technologies values({TechId},'{TechName}')";
-            command1.ExecuteReader().Close();
+            try
+            {
+                Console.WriteLine("enter id to be deleted in technologies");
+                int Techid = int.Parse(Console.ReadLine().Trim());
+                command1.CommandText = $"select count(*) from technologies where id={Techid}";
+                int count = (int)command1.ExecuteScalar();
+                if (count > 0)
+                {
+                    command1.CommandText = $"delete from technologies where id={Techid}";
+                    command1.ExecuteReader().Close();
+                    Console.WriteLine("Deleted");
+                }
+                else
+                {
+                    Console.WriteLine("Employee doesnt exist");
+                }
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine($"Error: {e.Message}");
+
+            }
+            catch (FormatException e)
+            {
+                Console.WriteLine($"Format Error: {e.Message}");
+            }
+            catch(InvalidOperationException e)
+            {
+                Console.WriteLine($"Error: {e.Message}");
+            }
+            //Console.WriteLine("Enter Id and name of technology to insert");
+            //int TechId = int.Parse( Console.ReadLine() );   
+            //string TechName = Console.ReadLine().Trim();
+            //command1.CommandText = $"insert into technologies values({TechId},'{TechName}')";
+            //command1.ExecuteReader().Close();
+
+            //// To read row by row with all columns
+            ////while (reader.Read())
+            ////{
+            ////    for (int j = 0; j < reader.FieldCount; j++)
+            ////    {
+            ////        Console.Write(reader[j] + " ");
+            ////    }
+            ////    Console.WriteLine();
+            ////    i++;
+            ////}
 
 
-            Console.WriteLine("Enter technology name to be searchedd");
-            TechName = Console.ReadLine().Trim();
-            command1.CommandText = $"select * from technologies where name='{TechName}'";
+            //Console.WriteLine("Enter technology name to be searchedd");
+            //TechName = Console.ReadLine().Trim();
+            command1.CommandText = $"select * from technologies";
             SqlDataReader reader = command1.ExecuteReader();
             Console.WriteLine($"Id       Name");
             while (reader.Read())
