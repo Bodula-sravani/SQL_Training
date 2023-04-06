@@ -14,7 +14,17 @@ namespace SQLConnection
             connection.Open();
             SqlCommand command1 = connection.CreateCommand();
 
-            command1.CommandText = $"select * from technologies";
+            
+            Console.WriteLine("Enter Id and name of technology to insert");
+            int TechId = int.Parse( Console.ReadLine() );   
+            string TechName = Console.ReadLine().Trim();
+            command1.CommandText = $"insert into technologies values({TechId},'{TechName}')";
+            command1.ExecuteReader().Close();
+
+
+            Console.WriteLine("Enter technology name to be searchedd");
+            TechName = Console.ReadLine().Trim();
+            command1.CommandText = $"select * from technologies where name='{TechName}'";
             SqlDataReader reader = command1.ExecuteReader();
             Console.WriteLine($"Id       Name");
             while (reader.Read())
